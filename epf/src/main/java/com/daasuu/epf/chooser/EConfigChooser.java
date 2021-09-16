@@ -16,11 +16,13 @@ import static javax.microedition.khronos.egl.EGL10.EGL_RED_SIZE;
 import static javax.microedition.khronos.egl.EGL10.EGL_RENDERABLE_TYPE;
 import static javax.microedition.khronos.egl.EGL10.EGL_STENCIL_SIZE;
 
+import com.daasuu.epf.GLTextureView;
+
 /**
  * Created by sudamasayuki on 2017/05/16.
  */
 
-public class EConfigChooser implements GLSurfaceView.EGLConfigChooser {
+public class EConfigChooser implements GLTextureView.EGLConfigChooser {
 
     private final int[] configSpec;
     private final int redSize;

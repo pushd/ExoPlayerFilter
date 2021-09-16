@@ -1,7 +1,6 @@
 package com.daasuu.epf;
 
 import android.content.Context;
-import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
 import com.daasuu.epf.chooser.EConfigChooser;
@@ -13,7 +12,7 @@ import com.google.android.exoplayer2.video.VideoListener;
 /**
  * Created by sudamasayuki on 2017/05/16.
  */
-public class EPlayerView extends GLSurfaceView implements VideoListener {
+public class EPlayerView extends GLTextureView implements VideoListener {
 
     private final static String TAG = EPlayerView.class.getSimpleName();
 

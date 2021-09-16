@@ -11,11 +11,13 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import static javax.microedition.khronos.egl.EGL10.EGL_NONE;
 import static javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT;
 
+import com.daasuu.epf.GLTextureView;
+
 /**
  * Created by sudamasayuki on 2017/05/16.
  */
 
-public class EContextFactory implements GLSurfaceView.EGLContextFactory {
+public class EContextFactory implements GLTextureView.EGLContextFactory {
 
     private static final String TAG = "EContextFactory";
 

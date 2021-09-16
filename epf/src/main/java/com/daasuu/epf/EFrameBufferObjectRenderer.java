@@ -19,7 +19,7 @@ import static android.opengl.GLES20.GL_FRAMEBUFFER;
  * Created by sudamasayuki on 2017/05/16.
  */
 
-abstract class EFrameBufferObjectRenderer implements GLSurfaceView.Renderer {
+abstract class EFrameBufferObjectRenderer implements GLTextureView.Renderer {
 
     private EFramebufferObject framebufferObject;
     private GlFilter normalShader;
