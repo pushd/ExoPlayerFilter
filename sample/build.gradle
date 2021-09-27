@@ -29,6 +29,7 @@ dependencies {
 
 
     implementation project(':epf')
+    implementation(name: 'colorpal-debug', ext: 'aar')
 
     implementation 'com.google.android.exoplayer:exoplayer-core:2.14.0'
 }

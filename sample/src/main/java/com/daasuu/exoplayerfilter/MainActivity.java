@@ -1,25 +1,31 @@
 package com.daasuu.exoplayerfilter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.daasuu.epf.EPlayerView;
+import com.daasuu.epf.PlayerScaleType;
+import com.daasuu.epf.filter.GlFilter;
+import com.daasuu.epf.filter.GlLookUpTableFilter;
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.util.Util;
-
-import java.util.List;
+import com.pushd.colorpal.ColorCorrector;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,14 +35,15 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
     private SeekBar seekBar;
     private PlayerTimer playerTimer;
+    private boolean filterIsActive;
+    private GlFilter lutFilter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setUpViews();
-
+        //setUpViews();
     }
 
     @Override
@@ -44,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         setUpSimpleExoPlayer();
         setUoGlPlayerView();
-        setUpTimer();
+        //setUpTimer();
     }
 
     @Override
@@ -57,61 +64,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setUpViews() {
-        // play pause
-        button = (Button) findViewById(R.id.btn);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (player == null) return;
 
-                if (button.getText().toString().equals(MainActivity.this.getString(R.string.pause))) {
-                    player.setPlayWhenReady(false);
-                    button.setText(R.string.play);
-                } else {
-                    player.setPlayWhenReady(true);
-                    button.setText(R.string.pause);
-                }
-            }
-        });
-
-        // seek
-        seekBar = (SeekBar) findViewById(R.id.seekBar);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (player == null) return;
-
-                if (!fromUser) {
-                    // We're not interested in programmatically generated changes to
-                    // the progress bar's position.
-                    return;
-                }
-
-                player.seekTo(progress * 1000);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // do nothing
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // do nothing
-            }
-        });
-
-        // list
-        ListView listView = (ListView) findViewById(R.id.list);
-        final List<FilterType> filterTypes = FilterType.createFilterList();
-        listView.setAdapter(new FilterAdapter(this, R.layout.row_text, filterTypes));
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ePlayerView.setGlFilter(FilterType.createGlFilter(filterTypes.get(position), getApplicationContext()));
-            }
-        });
+    private void hideSystemUI() {
+        // Enables regular immersive mode.
+        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
 
@@ -121,11 +89,19 @@ public class MainActivity extends AppCompatActivity {
         // Produces DataSource instances through which media data is loaded.
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"));
 
+        DefaultRenderersFactory factory = new DefaultRenderersFactory(this);
+        factory.experimentalSetAsynchronousBufferQueueingEnabled(true);
+        factory.experimentalSetForceAsyncQueueingSynchronizationWorkaround(true);
+        factory.experimentalSetSynchronizeCodecInteractionsWithQueueingEnabled(true);
+
         // SimpleExoPlayer
-        player = new SimpleExoPlayer.Builder(this)
+        player = new SimpleExoPlayer.Builder(this, factory)
                 .setMediaSourceFactory(new ProgressiveMediaSource.Factory(dataSourceFactory))
                 .build();
-        player.addMediaItem(MediaItem.fromUri(Constant.STREAM_URL_MP4_VOD_SHORT));
+        //player.addMediaItem(MediaItem.fromUri(Constant.STREAM_URL_MP4_VOD_SHORT));
+        player.addMediaItem(MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.land_017)));
+        player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+        player.setRepeatMode(Player.REPEAT_MODE_ALL);
         player.prepare();
         player.setPlayWhenReady(true);
     }
@@ -135,7 +111,16 @@ public class MainActivity extends AppCompatActivity {
         ePlayerView = new EPlayerView(this);
         ePlayerView.setSimpleExoPlayer(player);
         ePlayerView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ePlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_NONE);
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(ePlayerView);
+        ColorCorrector corrector = new ColorCorrector();
+        corrector.loadDisplayICCProfile("/private/calibration/latestDisplayProfile.icc");
+        Bitmap lut = BitmapFactory.decodeResource(getResources(), R.drawable.lut_reference_flipped);
+        corrector.correctBitmap(lut);
+        lutFilter = new GlLookUpTableFilter(lut);
+    //    lutFilter = new GlLargeLookupTableFilter(lut);
+        ePlayerView.setGlFilter(lutFilter);
+
         ePlayerView.onResume();
     }
 
