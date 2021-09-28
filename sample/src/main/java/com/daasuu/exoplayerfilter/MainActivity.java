@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 .setMediaSourceFactory(new ProgressiveMediaSource.Factory(dataSourceFactory))
                 .build();
         //player.addMediaItem(MediaItem.fromUri(Constant.STREAM_URL_MP4_VOD_SHORT));
-        player.addMediaItem(MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.land_017)));
+        player.addMediaItem(MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.mojita)));
         player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
         player.setRepeatMode(Player.REPEAT_MODE_ALL);
         player.prepare();
