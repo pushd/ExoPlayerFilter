@@ -37,6 +37,11 @@ public class EPlayerView extends GLTextureView implements VideoListener {
 
     }
 
+    public void setScaleAndTranslate(float scaleX, float scaleY, float translateX, float translateY) {
+        renderer.setScaleFactor(scaleX, scaleY);
+        renderer.setTranslationFactor(translateX, translateY);
+    }
+
     public EPlayerView setSimpleExoPlayer(SimpleExoPlayer player) {
         if (this.player != null) {
             this.player.release();

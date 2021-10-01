@@ -1,5 +1,12 @@
 package com.daasuu.epf;
 
+import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
+import static android.opengl.GLES20.GL_LINEAR;
+import static android.opengl.GLES20.GL_MAX_TEXTURE_SIZE;
+import static android.opengl.GLES20.GL_NEAREST;
+import static android.opengl.GLES20.GL_TEXTURE_2D;
+import static android.opengl.GLES20.glViewport;
+
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -14,13 +21,6 @@ import com.daasuu.epf.filter.GlPreviewFilter;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import javax.microedition.khronos.egl.EGLConfig;
-
-import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
-import static android.opengl.GLES20.GL_LINEAR;
-import static android.opengl.GLES20.GL_MAX_TEXTURE_SIZE;
-import static android.opengl.GLES20.GL_NEAREST;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.glViewport;
 
 /**
  * Created by sudamasayuki on 2017/05/16.
@@ -41,6 +41,11 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
     private final float[] VMatrix = new float[16];
     private final float[] STMatrix = new float[16];
 
+    // TODO better representation via matrices?
+    private float scaleX = 1f;
+    private float scaleY = 1f;
+    private float translateX = 0f;
+    private float translateY = 0f;
 
     private EFramebufferObject filterFramebufferObject;
     private GlPreviewFilter previewFilter;
@@ -57,6 +62,16 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
         super();
         Matrix.setIdentityM(STMatrix, 0);
         this.glPreview = glPreview;
+    }
+
+    public void setScaleFactor(float x, float y) {
+       scaleX = x;
+       scaleY = y;
+    }
+
+    public void setTranslationFactor(float x, float y) {
+        translateX = x;
+        translateY = y;
     }
 
     void setGlFilter(final GlFilter filter) {
@@ -163,8 +178,12 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
 
         GLES20.glClear(GL_COLOR_BUFFER_BIT);
 
+        // represents the transform from the source to the display
         Matrix.multiplyMM(MVPMatrix, 0, VMatrix, 0, MMatrix, 0);
         Matrix.multiplyMM(MVPMatrix, 0, ProjMatrix, 0, MVPMatrix, 0);
+
+        Matrix.scaleM(MVPMatrix, 0, scaleX, scaleY, 0f);
+        Matrix.translateM(MVPMatrix, 0, translateX, translateY, 0f);
 
         previewFilter.draw(texName, MVPMatrix, STMatrix, aspectRatio);
 
