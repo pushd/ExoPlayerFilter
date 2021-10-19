@@ -189,7 +189,7 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
         Matrix.multiplyMM(MVPMatrix, 0, ProjMatrix, 0, MVPMatrix, 0);
 
         if (mvpCallback != null) {
-            mvpCallback.transformMVP(MVPMatrix);
+            mvpCallback.transformMVP(MVPMatrix, fbo.getWidth(), fbo.getHeight());
         }
 
         previewFilter.draw(texName, MVPMatrix, STMatrix, aspectRatio);

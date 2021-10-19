@@ -23,7 +23,7 @@ public class EPlayerView extends GLTextureView implements VideoListener {
     private PlayerScaleType playerScaleType = PlayerScaleType.RESIZE_FIT_WIDTH;
 
     public abstract static class MVPCallback {
-        public abstract void transformMVP(float[] mvpMatrix);
+        public abstract void transformMVP(float[] mvpMatrix, int width, int height);
     }
 
     public EPlayerView(Context context) {
