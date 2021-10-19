@@ -164,8 +164,14 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
 
         synchronized (this) {
             if (updateSurface) {
-                previewTexture.updateTexImage();
-                previewTexture.getTransformMatrix(STMatrix);
+                try {
+                    previewTexture.updateTexImage();
+                    previewTexture.getTransformMatrix(STMatrix);
+                } catch (RuntimeException e) {
+                    if (!e.getMessage().contains("Error during updateTexImage")) {
+                        throw e;
+                    } // else swallow exception related to racing previewTexture.release()
+                }
                 updateSurface = false;
             }
         }
