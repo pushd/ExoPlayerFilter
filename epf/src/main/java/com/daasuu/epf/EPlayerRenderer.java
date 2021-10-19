@@ -15,6 +15,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Surface;
 
+import com.daasuu.epf.EPlayerView.MVPCallback;
 import com.daasuu.epf.filter.GlFilter;
 import com.daasuu.epf.filter.GlLookUpTableFilter;
 import com.daasuu.epf.filter.GlPreviewFilter;
@@ -57,6 +58,12 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
     private float aspectRatio = 1f;
 
     private SimpleExoPlayer simpleExoPlayer;
+
+    private MVPCallback mvpCallback;
+
+    public void setMVPCallback(MVPCallback mvpCallback) {
+        this.mvpCallback = mvpCallback;
+    }
 
     EPlayerRenderer(EPlayerView glPreview) {
         super();
@@ -178,12 +185,12 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
 
         GLES20.glClear(GL_COLOR_BUFFER_BIT);
 
-        // represents the transform from the source to the display
         Matrix.multiplyMM(MVPMatrix, 0, VMatrix, 0, MMatrix, 0);
         Matrix.multiplyMM(MVPMatrix, 0, ProjMatrix, 0, MVPMatrix, 0);
 
-        Matrix.scaleM(MVPMatrix, 0, scaleX, scaleY, 0f);
-        Matrix.translateM(MVPMatrix, 0, translateX, translateY, 0f);
+        if (mvpCallback != null) {
+            mvpCallback.transformMVP(MVPMatrix);
+        }
 
         previewFilter.draw(texName, MVPMatrix, STMatrix, aspectRatio);
 
@@ -211,6 +218,7 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
         if (previewTexture != null) {
             previewTexture.release();
         }
+        mvpCallback = null;
     }
 
 }

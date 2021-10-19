@@ -1,7 +1,10 @@
 package com.daasuu.epf;
 
+import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
+import static android.opengl.GLES20.GL_DEPTH_BUFFER_BIT;
+import static android.opengl.GLES20.GL_FRAMEBUFFER;
+
 import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
 
 import com.daasuu.epf.filter.GlFilter;
 
@@ -10,10 +13,6 @@ import java.util.Queue;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
-import static android.opengl.GLES20.GL_DEPTH_BUFFER_BIT;
-import static android.opengl.GLES20.GL_FRAMEBUFFER;
 
 /**
  * Created by sudamasayuki on 2017/05/16.

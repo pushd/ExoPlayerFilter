@@ -22,6 +22,10 @@ public class EPlayerView extends GLTextureView implements VideoListener {
     private float videoAspect = 1f;
     private PlayerScaleType playerScaleType = PlayerScaleType.RESIZE_FIT_WIDTH;
 
+    public abstract static class MVPCallback {
+        public abstract void transformMVP(float[] mvpMatrix);
+    }
+
     public EPlayerView(Context context) {
         this(context, null);
     }
@@ -37,9 +41,8 @@ public class EPlayerView extends GLTextureView implements VideoListener {
 
     }
 
-    public void setScaleAndTranslate(float scaleX, float scaleY, float translateX, float translateY) {
-        renderer.setScaleFactor(scaleX, scaleY);
-        renderer.setTranslationFactor(translateX, translateY);
+    public void setMVPCallback(MVPCallback mvpCallback) {
+        this.renderer.setMVPCallback(mvpCallback);
     }
 
     public EPlayerView setSimpleExoPlayer(SimpleExoPlayer player) {
