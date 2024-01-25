@@ -1,17 +1,16 @@
 package com.daasuu.epf.contextfactory;
 
-import android.opengl.GLSurfaceView;
+import static javax.microedition.khronos.egl.EGL10.EGL_NONE;
+import static javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT;
+
 import android.util.Log;
+
+import com.daasuu.epf.GLTextureView;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
-
-import static javax.microedition.khronos.egl.EGL10.EGL_NONE;
-import static javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT;
-
-import com.daasuu.epf.GLTextureView;
 
 /**
  * Created by sudamasayuki on 2017/05/16.
