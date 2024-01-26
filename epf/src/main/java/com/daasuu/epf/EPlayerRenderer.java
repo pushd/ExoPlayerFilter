@@ -15,11 +15,12 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Surface;
 
+import androidx.media3.exoplayer.ExoPlayer;
+
 import com.daasuu.epf.EPlayerView.MVPCallback;
 import com.daasuu.epf.filter.GlFilter;
 import com.daasuu.epf.filter.GlLookUpTableFilter;
 import com.daasuu.epf.filter.GlPreviewFilter;
-import com.google.android.exoplayer2.ExoPlayer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
@@ -57,7 +58,7 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
 
     private float aspectRatio = 1f;
 
-    private ExoPlayer simpleExoPlayer;
+    private ExoPlayer exoPlayer;
 
     private MVPCallback mvpCallback;
 
@@ -124,7 +125,7 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
         previewFilter.setup();
         new Handler(Looper.getMainLooper()).post(() -> {
             Surface surface = new Surface(previewTexture.getSurfaceTexture());
-            simpleExoPlayer.setVideoSurface(surface);
+            exoPlayer.setVideoSurface(surface);
         });
 
         Matrix.setLookAtM(VMatrix, 0,
@@ -213,8 +214,8 @@ class EPlayerRenderer extends EFrameBufferObjectRenderer implements SurfaceTextu
         glPreview.requestRender();
     }
 
-    void setSimpleExoPlayer(ExoPlayer simpleExoPlayer) {
-        this.simpleExoPlayer = simpleExoPlayer;
+    void setExoPlayer(ExoPlayer exoPlayer) {
+        this.exoPlayer = exoPlayer;
     }
 
     void release() {

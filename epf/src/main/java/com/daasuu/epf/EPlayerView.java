@@ -3,12 +3,13 @@ package com.daasuu.epf;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import androidx.media3.common.Player;
+import androidx.media3.common.VideoSize;
+import androidx.media3.exoplayer.ExoPlayer;
+
 import com.daasuu.epf.chooser.EConfigChooser;
 import com.daasuu.epf.contextfactory.EContextFactory;
 import com.daasuu.epf.filter.GlFilter;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.video.VideoSize;
 
 /**
  * Created by sudamasayuki on 2017/05/16.
@@ -47,14 +48,14 @@ public class EPlayerView extends GLTextureView implements Player.Listener {
         this.renderer.setMVPCallback(mvpCallback);
     }
 
-    public EPlayerView setSimpleExoPlayer(ExoPlayer player) {
+    public EPlayerView setExoPlayer(ExoPlayer player) {
         if (this.player != null) {
             this.player.release();
             this.player = null;
         }
         this.player = player;
         this.player.addListener(this);
-        this.renderer.setSimpleExoPlayer(player);
+        this.renderer.setExoPlayer(player);
         return this;
     }
 

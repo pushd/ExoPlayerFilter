@@ -27,8 +27,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.6.1'
 
-
     implementation project(':epf')
 
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
+    implementation 'androidx.media3:media3-exoplayer:1.1.1'
 }

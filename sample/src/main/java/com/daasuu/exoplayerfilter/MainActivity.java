@@ -9,15 +9,17 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.common.util.Util;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.datasource.DefaultDataSourceFactory;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 
 import com.daasuu.epf.EPlayerView;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 import java.util.List;
 
@@ -60,18 +62,15 @@ public class MainActivity extends AppCompatActivity {
     private void setUpViews() {
         // play pause
         button = (Button) findViewById(R.id.btn);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (player == null) return;
+        button.setOnClickListener(v -> {
+            if (player == null) return;
 
-                if (button.getText().toString().equals(MainActivity.this.getString(R.string.pause))) {
-                    player.setPlayWhenReady(false);
-                    button.setText(R.string.play);
-                } else {
-                    player.setPlayWhenReady(true);
-                    button.setText(R.string.pause);
-                }
+            if (button.getText().toString().equals(MainActivity.this.getString(R.string.pause))) {
+                player.setPlayWhenReady(false);
+                button.setText(R.string.play);
+            } else {
+                player.setPlayWhenReady(true);
+                button.setText(R.string.pause);
             }
         });
 
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setUpSimpleExoPlayer() {
+    @OptIn(markerClass = UnstableApi.class) private void setUpSimpleExoPlayer() {
 
 
         // Produces DataSource instances through which media data is loaded.
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUoGlPlayerView() {
         ePlayerView = new EPlayerView(this);
-        ePlayerView.setSimpleExoPlayer(player);
+        ePlayerView.setExoPlayer(player);
         ePlayerView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(ePlayerView);
         ePlayerView.onResume();
@@ -166,6 +165,4 @@ public class MainActivity extends AppCompatActivity {
         player.release();
         player = null;
     }
-
-
 }
